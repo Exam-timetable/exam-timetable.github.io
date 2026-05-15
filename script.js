@@ -107,7 +107,7 @@ function createExamCard(exam, index) {
     const progressPercent = Math.max(0, Math.min(100, ((daysRemaining) / 187) * 100));
     
     const html = `
-        <div class="exam-card ${urgency} ${isCompleted ? 'completed' : ''}" data-exam-id="${examId}" data-category="${exam.category}" data-urgency="${urgency}">
+        <div class="exam-card ${urgency} ${isCompleted ? 'completed' : ''}" data-exam-id="${examId}" data-category="${exam.category}" data-urgency="${urgency}" data-type="${(exam.type||'').toLowerCase()}">
             <div class="exam-header">
                 <div class="exam-title">${exam.name}</div>
                 <div class="exam-date">${formatDate(exam.date)}</div>
@@ -295,11 +295,13 @@ function applyFilters() {
         if (activeFilter !== 'all') {
             const urgency = card.getAttribute('data-urgency');
             const category = card.getAttribute('data-category');
+            const type = (card.getAttribute('data-type') || '').toLowerCase();
             
             if (activeFilter === 'urgent' && urgency !== 'urgent') shouldShow = false;
             if (activeFilter === 'wa2' && category !== 'wa2') shouldShow = false;
             if (activeFilter === 'o-level' && category !== 'o-level') shouldShow = false;
             if (activeFilter === 'completed' && urgency !== 'completed') shouldShow = false;
+            if (activeFilter === 'prelim' && type !== 'prelim') shouldShow = false;
         }
         
         card.classList.toggle('hidden', !shouldShow);
