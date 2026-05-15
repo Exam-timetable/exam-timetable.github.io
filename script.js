@@ -47,6 +47,7 @@ function setupExamTypeOptions() {
         <option value="WA4">WA4</option>
         <option value="End-of-Year">End-of-Year</option>
         <option value="O-level">O-level</option>
+        <option value="Prelim">Prelim</option>
         <option value="Timed Practice">Timed Practice</option>
     `;
 }
