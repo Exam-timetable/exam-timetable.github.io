@@ -230,14 +230,12 @@ function updateStats() {
         }
     });
     
-    const progressPercent = total === 0 ? 0 : Math.round((completed / total) * 100);
-    
     document.getElementById('totalExams').textContent = total;
     document.getElementById('urgentCount').textContent = urgent;
     document.getElementById('highCount').textContent = high;
     document.getElementById('plannedCount').textContent = planned;
     document.getElementById('completedCount').textContent = completed;
-    document.getElementById('progressPercent').textContent = progressPercent + '%';
+    // progress stat removed from UI
     
     updateNextExam();
 }
