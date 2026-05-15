@@ -294,12 +294,19 @@ function applyFilters() {
             const urgency = card.getAttribute('data-urgency');
             const category = card.getAttribute('data-category');
             const type = (card.getAttribute('data-type') || '').toLowerCase();
-            
+            // Known special filters
             if (activeFilter === 'urgent' && urgency !== 'urgent') shouldShow = false;
-            if (activeFilter === 'wa2' && category !== 'wa2') shouldShow = false;
-            if (activeFilter === 'o-level' && category !== 'o-level') shouldShow = false;
-            if (activeFilter === 'completed' && urgency !== 'completed') shouldShow = false;
-            if (activeFilter === 'prelim' && type !== 'prelim') shouldShow = false;
+            else if (activeFilter === 'completed' && urgency !== 'completed') shouldShow = false;
+            else if (activeFilter === 'wa2' && category !== 'wa2') shouldShow = false;
+            else if (activeFilter === 'o-level' && category !== 'o-level') shouldShow = false;
+            else {
+                // If the active filter isn't a special category, treat it as a type filter (e.g., wa1, wa3, end-of-year, timed practice, prelim)
+                // Compare normalized strings
+                const normalizedActive = String(activeFilter).toLowerCase();
+                if (!['urgent','completed','wa2','o-level'].includes(normalizedActive)) {
+                    if (type !== normalizedActive) shouldShow = false;
+                }
+            }
         }
         
         card.classList.toggle('hidden', !shouldShow);
