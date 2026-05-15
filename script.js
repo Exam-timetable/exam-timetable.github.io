@@ -22,6 +22,11 @@ function loadCustomExams() {
             exam.id = createExamId(exam);
             needsPersist = true;
         }
+        // Ensure backwards compatibility: derive category from type if missing
+        if (!exam.category) {
+            exam.category = deriveCategoryFromType(exam.type || '');
+        }
+
         examsData.push(exam);
     });
 
@@ -41,7 +46,19 @@ function setupExamTypeOptions() {
         <option value="WA3">WA3</option>
         <option value="WA4">WA4</option>
         <option value="End-of-Year">End-of-Year</option>
+        <option value="O-level">O-level</option>
+        <option value="Timed Practice">Timed Practice</option>
     `;
+}
+
+// Map the selected type to an internal category used for grouping
+function deriveCategoryFromType(type) {
+    if (!type) return 'custom';
+    const t = String(type).toLowerCase();
+    if (t.startsWith('wa')) return 'wa2';
+    if (t.includes('o-level') || t === 'o-level') return 'o-level';
+    // End-of-Year and Timed Practice are treated as custom
+    return 'custom';
 }
 
 // Calculate days remaining
@@ -334,22 +351,23 @@ function addNewExam(event) {
     
     const name = document.getElementById('examName').value.trim();
     const dateStr = document.getElementById('examDate').value;
-    const category = document.getElementById('examCategory').value;
     const type = document.getElementById('examType').value;
-    
-    if (!name || !dateStr || !category || !type) {
+
+    if (!name || !dateStr || !type) {
         alert('Please fill in all fields');
         return;
     }
     
     // Parse the date
     const [year, month, day] = dateStr.split('-');
+    const examDate = new Date(year, month - 1, day);
+    const categoryDerived = deriveCategoryFromType(type);
     const newExam = {
         name,
-        date: new Date(year, month - 1, day),
-        category,
+        date: examDate,
+        category: categoryDerived,
         type,
-        id: createExamId({ name, date: new Date(year, month - 1, day), category })
+        id: createExamId({ name, date: examDate, category: categoryDerived })
     };
     
     // Add to examsData
