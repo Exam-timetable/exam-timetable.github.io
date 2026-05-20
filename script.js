@@ -1,5 +1,21 @@
-// Reference Date: Today's date (auto-updates as days pass)
-const REFERENCE_DATE = new Date();
+// Helper: get today's date at midnight (local)
+function todayAtMidnight() {
+    const d = new Date();
+    d.setHours(0,0,0,0);
+    return d;
+}
+
+// Small non-blocking toast for messages
+function showToast(message, timeout = 2500) {
+    const toast = document.getElementById('toast');
+    if (!toast) return;
+    toast.textContent = message;
+    toast.style.display = 'block';
+    setTimeout(() => {
+        toast.style.display = 'none';
+        toast.textContent = '';
+    }, timeout);
+}
 
 // All exam data
 const examsData = [];
@@ -64,8 +80,10 @@ function deriveCategoryFromType(type) {
 
 // Calculate days remaining
 function calculateDaysRemaining(examDate) {
-    const today = REFERENCE_DATE;
-    const timeDifference = examDate - today;
+    const today = todayAtMidnight();
+    const examDay = new Date(examDate);
+    examDay.setHours(0,0,0,0);
+    const timeDifference = examDay - today;
     const daysRemaining = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
     return daysRemaining;
 }
@@ -130,14 +148,14 @@ function createExamCard(exam, index) {
             </div>
             
             <div class="exam-actions">
-                <button class="action-btn mark-complete-btn" onclick="toggleComplete('${examId}')">
+                <button class="action-btn mark-complete-btn" onclick="toggleComplete('${examId}')" aria-label="Toggle complete">
                     ${isCompleted ? '↩️ Undo' : '✓ Done'}
                 </button>
                 <button class="action-btn" onclick="toggleNoteInput('${examId}')">📝 Note</button>
                 <button class="action-btn delete-btn" onclick="deleteExam('${examId}')" title="Delete this exam">🗑️ Delete</button>
             </div>
             
-            <div class="note-input-container" id="note-container-${examId}" style="display: none; margin-top: 1rem;">
+                <div class="note-input-container" id="note-container-${examId}" style="display: none; margin-top: 1rem;">
                 <textarea class="note-input" id="note-input-${examId}" placeholder="Add your study notes here..." style="width: 100%; padding: 0.5rem; border: 2px solid var(--border-color); border-radius: 8px; resize: vertical; min-height: 80px; font-family: inherit; background: var(--light-gray); color: var(--text-light);">${examNote}</textarea>
                 <button class="action-btn primary" onclick="saveNote('${examId}')" style="margin-top: 0.5rem; width: 100%;">💾 Save Note</button>
             </div>
@@ -158,6 +176,7 @@ function toggleComplete(examId) {
 // Toggle note input
 function toggleNoteInput(examId) {
     const container = document.getElementById(`note-container-${examId}`);
+    if (!container) return;
     container.style.display = container.style.display === 'none' ? 'block' : 'none';
 }
 
@@ -166,7 +185,7 @@ function saveNote(examId) {
     const noteInput = document.getElementById(`note-input-${examId}`);
     const note = noteInput.value;
     localStorage.setItem(`exam-${examId}-note`, note);
-    alert('Note saved! 📝');
+    showToast('Note saved! 📝');
 }
 
 // Render all exams
@@ -332,13 +351,18 @@ function setupDarkMode() {
     
     if (isDarkMode) {
         document.body.classList.add('dark-mode');
-        themeToggle.textContent = '☀️';
+        if (themeToggle) {
+            themeToggle.textContent = '☀️';
+            themeToggle.setAttribute('aria-pressed', 'true');
+        }
     }
     
+    if (!themeToggle) return;
     themeToggle.addEventListener('click', () => {
         const isDark = document.body.classList.toggle('dark-mode');
         localStorage.setItem('darkMode', isDark);
         themeToggle.textContent = isDark ? '☀️' : '🌙';
+        themeToggle.setAttribute('aria-pressed', String(isDark));
     });
 }
 
@@ -362,7 +386,7 @@ function addNewExam(event) {
     const type = document.getElementById('examType').value;
 
     if (!name || !dateStr || !type) {
-        alert('Please fill in all fields');
+        showToast('Please fill in all fields');
         return;
     }
     
@@ -397,7 +421,7 @@ function addNewExam(event) {
     updateStats();
     hideAddExamForm();
     
-    alert(`✅ "${name}" added successfully!`);
+    showToast(`✅ "${name}" added successfully!`);
 }
 
 // Delete exam
@@ -431,7 +455,7 @@ function deleteExam(examId) {
     renderExams();
     updateStats();
     
-    alert(`✅ "${exam.name}" deleted successfully!`);
+    showToast(`✅ "${exam.name}" deleted successfully!`);
 }
 
 // Initialize on page load

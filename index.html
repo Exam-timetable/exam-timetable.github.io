@@ -5,27 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exam Countdown 2026</title>
     <link rel="stylesheet" href="styles.css">
+    <meta name="description" content="Simple exam countdown tracker with reminders, priorities, and notes.">
+    <meta name="theme-color" content="#1a1a2e">
 </head>
 <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <!-- Navigation Bar -->
-    <nav class="navbar">
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
         <div class="nav-container">
             <div class="logo">
                 <span class="logo-icon">📚</span>
                 <span class="logo-text">EXAM COUNTDOWN 2026</span>
             </div>
             <div class="nav-controls">
-                <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">
-                    <span class="theme-icon">🌙</span>
+                <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode" aria-pressed="false" aria-label="Toggle dark mode">
+                    <span class="theme-icon" aria-hidden="true">🌙</span>
                 </button>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <main id="main">
+    <section class="hero" aria-labelledby="heroHeading">
         <div class="hero-content">
-            <h1>Next Exam In</h1>
+            <h1 id="heroHeading">Next Exam In</h1>
             <div class="next-exam-card" id="nextExamCard">
                 <div class="countdown-display">
                     <span class="days-count" id="nextDaysCount">0</span>
@@ -39,6 +43,7 @@
             </div>
         </div>
     </section>
+
 
     <!-- Statistics Dashboard -->
     <section class="stats-section">
@@ -175,10 +180,14 @@
     </div>
 
     <!-- Footer -->
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
     <footer class="footer">
         <p>&copy; 2026 Exam Countdown Tracker. Study hard! 📚✨</p>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
 </body>
 </html>

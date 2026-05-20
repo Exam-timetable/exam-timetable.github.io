@@ -20,6 +20,71 @@
     --accent-blue: #3b82f6;
 }
 
+/* Accessibility utilities */
+.skip-link {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+.skip-link:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0.5rem 1rem;
+    background: var(--primary-color);
+    color: #fff;
+    border-radius: 6px;
+    margin: 0.5rem;
+    z-index: 9999;
+}
+
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Toast / status region */
+.toast {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    background: rgba(26,26,46,0.95);
+    color: var(--text-light);
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    z-index: 99999;
+    min-width: 200px;
+    display: none;
+}
+
+/* Focus visibility improvements */
+:focus {
+    outline: none;
+}
+:focus-visible {
+    outline: 3px solid var(--accent-blue);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
